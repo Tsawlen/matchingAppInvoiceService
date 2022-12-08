@@ -165,7 +165,7 @@ func generateTotalSection(document pdf.Maroto, invoice *dataStructures.Invoice) 
 				Size:  8,
 				Style: consts.Bold,
 			})
-			document.Text("Endbetrag: \t\t\t\t"+convertToString(invoice.Amount)+" EUR", props.Text{
+			document.Text("Endbetrag: \t\t\t"+convertToString(invoice.Amount)+" EUR", props.Text{
 				Top:   12,
 				Align: consts.Right,
 				Size:  8,

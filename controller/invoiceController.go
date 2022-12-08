@@ -24,6 +24,21 @@ func GetAllInvoices(db *gorm.DB) gin.HandlerFunc {
 	return gin.HandlerFunc(handler)
 }
 
+func GetAllInvoicesByUser(db *gorm.DB) gin.HandlerFunc {
+	handler := func(context *gin.Context) {
+		id := context.Param("id")
+		invoices, err := dbInterface.GetAllInvoicesByUser(db, id)
+		if err != nil {
+			context.AbortWithStatusJSON(http.StatusNotFound, gin.H{
+				"error": err,
+			})
+			return
+		}
+		context.JSON(http.StatusOK, invoices)
+	}
+	return gin.HandlerFunc(handler)
+}
+
 func CreateInvoice(db *gorm.DB) gin.HandlerFunc {
 	handler := func(context *gin.Context) {
 		var newInvoice dataStructures.Invoice

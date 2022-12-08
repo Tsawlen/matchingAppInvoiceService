@@ -47,6 +47,7 @@ func main() {
 	router := gin.Default()
 
 	router.GET("/invoice", controller.GetAllInvoices(db))
+	router.GET("/invoice/:id", controller.GetAllInvoicesByUser(db))
 
 	router.PUT("/invoice", controller.CreateInvoice(db))
 	router.PUT("/invoice/pay/:id", controller.SetInvoiceToPayed(db))

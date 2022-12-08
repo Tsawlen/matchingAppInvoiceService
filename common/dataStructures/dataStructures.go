@@ -8,14 +8,16 @@ import (
 )
 
 type Invoice struct {
-	Id        uuid.UUID    `json:"id" gorm:"primary_key"`
-	CreatedAt time.Time    `json:"createdAt" gorm:"autoCreateTime"`
-	UpdatedAt time.Time    `json:"updatedAt" gorm:"autoUpdatedTime"`
-	Biller    int          `json:"biller"`
-	Payer     int          `json:"payer"`
-	Amount    float64      `json:"amount"`
-	Service   string       `json:"service"`
-	PayedAt   sql.NullTime `json:"payedAt" gorm:"type:TIMESTAMP NULL"`
+	Id         uuid.UUID    `json:"id" gorm:"primary_key"`
+	CreatedAt  time.Time    `json:"createdAt" gorm:"autoCreateTime"`
+	UpdatedAt  time.Time    `json:"updatedAt" gorm:"autoUpdatedTime"`
+	Biller     int          `json:"biller"`
+	Payer      int          `json:"payer"`
+	Amount     float64      `json:"amount"`
+	Service    string       `json:"service"`
+	Hours      int          `json:"hours"`
+	InvoicePDF []byte       `json:"invoicePDF"`
+	PayedAt    sql.NullTime `json:"payedAt" gorm:"type:TIMESTAMP NULL"`
 }
 
 // Profile Service

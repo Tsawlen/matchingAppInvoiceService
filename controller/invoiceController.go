@@ -43,6 +43,7 @@ func CreateInvoice(db *gorm.DB) gin.HandlerFunc {
 			})
 			return
 		}
+		// To-Do: Generate Invoice PDF
 		context.JSON(http.StatusCreated, invoice)
 	}
 	return gin.HandlerFunc(handler)

@@ -17,6 +17,17 @@ func GetAllInvoices(db *gorm.DB) (*[]dataStructures.Invoice, error) {
 	return invoices, nil
 }
 
+func GetAllInvoicesByUser(db *gorm.DB, id string) (*[]dataStructures.Invoice, error) {
+	var invoices *[]dataStructures.Invoice
+
+	err := db.Model(&dataStructures.Invoice{}).Where("payer=?", id).Find(&invoices).Error
+
+	if err != nil {
+		return nil, err
+	}
+	return invoices, nil
+}
+
 func CreateInvoice(db *gorm.DB, invoice *dataStructures.Invoice) (*dataStructures.Invoice, error) {
 	result := db.Create(&invoice)
 	if result.Error != nil {

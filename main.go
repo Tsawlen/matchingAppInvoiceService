@@ -7,6 +7,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/tsawlen/matchingAppInvoiceService/common/database"
+	"github.com/tsawlen/matchingAppInvoiceService/common/initializer"
 	"github.com/tsawlen/matchingAppInvoiceService/controller"
 
 	"github.com/google/uuid"
@@ -36,6 +37,7 @@ var mockInvoice = dataStructures.Invoice{
 }
 
 func main() {
+	go initializer.LoadEnvVariables()
 	dbChannel := make(chan *gorm.DB)
 	sqlDBChannel := make(chan *sql.DB)
 	go database.InitializeConnection(dbChannel, sqlDBChannel)

@@ -10,7 +10,7 @@ import (
 )
 
 func InitializeConnection(dbChannel chan *gorm.DB, sqldbChannel chan *sql.DB) {
-	dsn := "root:root@tcp(0.0.0.0:3306)/invoices?parseTime=true"
+	dsn := "root:root@tcp(0.0.0.0:3307)/invoices?parseTime=true"
 	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
 
 	if err != nil {

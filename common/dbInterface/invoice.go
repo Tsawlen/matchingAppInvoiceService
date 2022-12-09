@@ -18,11 +18,6 @@ func GetAllInvoices(db *gorm.DB) (*[]dataStructures.Invoice, error) {
 }
 
 func CreateInvoice(db *gorm.DB, invoice *dataStructures.Invoice) (*dataStructures.Invoice, error) {
-	uuid, errUUID := uuid.NewRandom()
-	invoice.Id = uuid
-	if errUUID != nil {
-		return &dataStructures.Invoice{}, errUUID
-	}
 	result := db.Create(&invoice)
 	if result.Error != nil {
 		return &dataStructures.Invoice{}, result.Error

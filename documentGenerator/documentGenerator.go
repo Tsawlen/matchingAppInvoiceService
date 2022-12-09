@@ -33,11 +33,11 @@ func GenerateInvoicePDF(billed *dataStructures.User, invoice *dataStructures.Inv
 	generateInvoiceTable(document, invoice)
 	generateTotalSection(document, invoice)
 	registerDocFooter(document)
-	if err := document.OutputFileAndClose("test.pdf"); err != nil {
-		log.Println(err)
-	}
 	outDoc, err := document.Output()
 	if err != nil {
+		log.Println(err)
+	}
+	if err := document.OutputFileAndClose("test.pdf"); err != nil {
 		log.Println(err)
 	}
 	return outDoc.Bytes()

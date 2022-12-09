@@ -1,12 +1,16 @@
 package controller
 
 import (
+	"log"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
+	publish "github.com/tsawlen/matchingAppInvoiceService/Publish"
 	"github.com/tsawlen/matchingAppInvoiceService/common/dataStructures"
 	"github.com/tsawlen/matchingAppInvoiceService/common/dbInterface"
+	"github.com/tsawlen/matchingAppInvoiceService/connector"
+	"github.com/tsawlen/matchingAppInvoiceService/documentGenerator"
 	"gorm.io/gorm"
 )
 
@@ -34,6 +38,32 @@ func CreateInvoice(db *gorm.DB) gin.HandlerFunc {
 			return
 		}
 		// To-Do: Check for booth IDs to be valid
+		billed, errBill := connector.GetProfileById(newInvoice.Payer)
+		if errBill != nil || billed.ID == 0 {
+			log.Println(errBill)
+			context.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
+				"error": errBill,
+			})
+			return
+		}
+		biller, errBiller := connector.GetProfileById(newInvoice.Biller)
+		if errBiller != nil || biller.ID == 0 {
+			log.Println(errBill)
+			context.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
+				"error": errBill,
+			})
+			return
+		}
+		// Attributes
+		uuid, errUUID := uuid.NewRandom()
+		newInvoice.Id = uuid
+		if errUUID != nil {
+			log.Println(errUUID)
+		}
+		newInvoice.Amount = float64(newInvoice.Hours) * biller.Price
+		// Create InvoicePDF
+		pdfInvoice := documentGenerator.GenerateInvoicePDF(billed, &newInvoice)
+		newInvoice.InvoicePDF = pdfInvoice
 		// Create Invoice
 		invoice, errCreate := dbInterface.CreateInvoice(db, &newInvoice)
 		if errCreate != nil {
@@ -43,7 +73,7 @@ func CreateInvoice(db *gorm.DB) gin.HandlerFunc {
 			})
 			return
 		}
-		// To-Do: Generate Invoice PDF
+		publish.PublishInvoice(invoice)
 		context.JSON(http.StatusCreated, invoice)
 	}
 	return gin.HandlerFunc(handler)

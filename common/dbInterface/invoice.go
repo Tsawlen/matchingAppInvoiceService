@@ -6,7 +6,6 @@ import (
 	"github.com/google/uuid"
 	"github.com/tsawlen/matchingAppInvoiceService/common/dataStructures"
 	"gorm.io/gorm"
-	"gorm.io/gorm/clause"
 )
 
 func GetAllInvoices(db *gorm.DB) (*[]dataStructures.Invoice, error) {
@@ -21,7 +20,7 @@ func GetAllInvoices(db *gorm.DB) (*[]dataStructures.Invoice, error) {
 func GetAllInvoicesByUser(db *gorm.DB, id string) (*[]dataStructures.Invoice, error) {
 	var invoices *[]dataStructures.Invoice
 
-	err := db.Model(&dataStructures.Invoice{}).Preload(clause.Associations).Where("payer=?", id).Find(&invoices).Error
+	err := db.Model(&dataStructures.Invoice{}).Where("payer=?", id).Find(&invoices).Error
 
 	if err != nil {
 		return nil, err

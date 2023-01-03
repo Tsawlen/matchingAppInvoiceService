@@ -37,7 +37,9 @@ var mockInvoice = dataStructures.Invoice{
 }
 
 func main() {
-	go initializer.LoadEnvVariables()
+	readyChannel := make(chan bool)
+	go initializer.LoadEnvVariables(readyChannel)
+	<-readyChannel
 	dbChannel := make(chan *gorm.DB)
 	sqlDBChannel := make(chan *sql.DB)
 	go database.InitializeConnection(dbChannel, sqlDBChannel)
@@ -50,10 +52,14 @@ func main() {
 
 	router.GET("/invoice", controller.GetAllInvoices(db))
 	router.GET("/invoice/user/:id", controller.GetAllInvoicesByUser(db))
+	router.GET("/create-checkout-session", controller.CreateCheckoutSession())
+	router.GET("/create-payment-intent", controller.CreatePaymentIntent())
 
 	router.PUT("/invoice", controller.CreateInvoice(db))
 	router.PUT("/invoice/pay/:id", controller.SetInvoiceToPayed(db))
 
 	router.Run("0.0.0.0:8085")
+
+	// STRIPE SECTION
 
 }
